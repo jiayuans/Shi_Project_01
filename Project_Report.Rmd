@@ -8,7 +8,7 @@ output: pdf_document
 ```{r}
 library(knitr)
 dataset=read.csv('C:/UCHealth/FALL 2022/BIOS 6621 Statistical Consulting I/Week 6/lead-iq-01.csv')
-dataset$IQ[which(dataset$IQ == 999)] <- 99
+dataset$IQ[which(dataset$IQ == 999)] <- 99 
 boxplot(IQ ~ Smelter, data = dataset)
 kable(table(dataset$IQ, dataset$Smelter))
 mean(dataset$IQ)

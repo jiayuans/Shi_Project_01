@@ -1,0 +1,1308 @@
+---
+title: "ENACT R01 Analysis"
+author: "Jiayuan Shi"
+date: "2022-10-03"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+#Clear existing data and graphics
+rm(list=ls())
+graphics.off()
+#Load Hmisc library
+library(Hmisc)
+#Read Data
+data=read.csv('C:/UCHealth/RA/Lum ENACT R01/Raw Data/ENACTR01GroupVisits_DATA_2022-10-03_2049.csv')
+#Setting Labels
+
+label(data$record_id)="Record ID"
+label(data$redcap_event_name)="Event Name"
+label(data$site)="Site"
+label(data$mrn)="MRN"
+label(data$fname)="First name"
+label(data$lname)="Last Name"
+label(data$dob)="Date of Birth"
+label(data$age)="Age"
+label(data$pcp_fname)="PCP first name"
+label(data$pcp_lname)="PCP last name"
+label(data$pcp_degree)="PCP degree"
+label(data$language)="What language do you prefer?"
+label(data$race)="Race"
+label(data$ethnicity)="Ethnicity"
+label(data$gender)="Gender"
+label(data$phone)="Phone number(s)"
+label(data$email)=" Email address"
+label(data$address)="Address"
+label(data$zip)="Zip code"
+label(data$emer_name)="Emergency contact name"
+label(data$emer_rel)="Emergency contact relationship"
+label(data$emer_phone)="Emergency contact phone"
+label(data$ehr_demographic_data_complete)="Complete?"
+label(data$pra_assign)="PRA Assigned to case "
+label(data$recruit_dt)="Date Recruitment Letter Mailed"
+label(data$recruit_dt_2)="Date Recruitment Email Sent"
+label(data$firstcall)="Date of First Recruitment Call"
+label(data$firstpra)="Person who called"
+label(data$firstpra_other)="Please specify:"
+label(data$call_outcome1)="First call outcome"
+label(data$secondcall)="Date of second call"
+label(data$secondpra)="Person who called"
+label(data$secpra_other)="Please specify:"
+label(data$call_outcome2)="Second call outcome"
+label(data$thirdcall)="Date of third call"
+label(data$thirdpra)="Person who called"
+label(data$thirdpra_other)="Please specify:"
+label(data$call_outcome3)="Third call outcome"
+label(data$notes)="Additional Notes"
+label(data$recruitment_tracking_complete)="Complete?"
+label(data$eligible_date)="Date Eligibility Survey Completed"
+label(data$screen_phone)="1. Do you have a phone to enable follow up?"
+label(data$phone1)="Best number to reach you"
+label(data$phone2)="Alternative number to reach you. "
+label(data$travel_visits)="2. Are you able to travel to clinic for the study on group visit days?"
+label(data$move_yn)="3. Do you plan to move away from the area in the next 6 months?"
+label(data$spouse)="4. Is a member of your household, like spouse or partner, currently enrolled in this study?"
+label(data$cg_status)=" In the last 12 months, have you been a caregiver for another person to help them take care of themselves?"
+label(data$screen_outcome)="Pre-Screen Outcome"
+label(data$decline)="Can you tell me why you are not interested?"
+label(data$decline_2___1)="Can you tell me why you are not interested? (choice=not interested)"
+label(data$decline_2___2)="Can you tell me why you are not interested? (choice=illness/not feeling well)"
+label(data$decline_2___3)="Can you tell me why you are not interested? (choice=already completed AD/ACP paperwork)"
+label(data$decline_2___4)="Can you tell me why you are not interested? (choice=already had ACP conversations)"
+label(data$decline_2___5)="Can you tell me why you are not interested? (choice=No reason given)"
+label(data$decline_2___6)="Can you tell me why you are not interested? (choice=other)"
+label(data$decline_oth)="Reason Declined - other"
+label(data$decline_oth_2)="Reason Declined"
+label(data$death_date)="Date of death"
+label(data$inelig_details)="Provide details about ineligibility"
+label(data$contact_later)="Would the participant like to be contacted at a later time?"
+label(data$details)="Provide more details"
+label(data$participant_eligibility_survey_phone_screening_complete)="Complete?"
+label(data$verbal_consent_complete)="Complete?"
+label(data$tback_q1)="What is the study asking you to do? "
+label(data$tback_q2)="What are the risks/side effects of being in this study? "
+label(data$tback_q3)="Is the study voluntary? "
+label(data$tback_q4)="What do you do if you have questions? "
+label(data$correct)="Number of correct answers out of 4 at first attempt:"
+label(data$tback_q5)="What is the study asking you to do? "
+label(data$tback_q6)="What are the risks/side effects of being in this study? "
+label(data$tback_q7)="Is the study voluntary? "
+label(data$tback_q8)="What do you do if you have questions? "
+label(data$correct_2)="Number of correct answers out of 4 at second attempt:"
+label(data$tback_q9)="What is the study asking you to do? "
+label(data$tback_q10)="What are the risks/side effects of being in this study? "
+label(data$tback_q11)="Is the study voluntary? "
+label(data$tback_q12)="What do you do if you have questions? "
+label(data$correct_3)="Number of correct answers out of 4 at third attempt:"
+label(data$tback_q13)="What is the study asking you to do? "
+label(data$tback_q14)="What are the risks/side effects of being in this study? "
+label(data$tback_q15)="Is the study voluntary? "
+label(data$tback_q17)="What do you do if you have questions? "
+label(data$correct_4)="Number of correct answers out of 4 at final attempt:"
+label(data$teachback_questions_complete)="Complete?"
+label(data$consented)="Consented?"
+label(data$consent_date)="Date of consent"
+label(data$gender_id_pt)="How do you identify yourself? (Gender Identity)"
+label(data$race_2)="Race"
+label(data$ethnicity_2)="Ethnicity  (Please confirm if already known)"
+label(data$education)="What is your highest education level?"
+label(data$educ_cat)="Education category "
+label(data$educat_rand)="ENTER Education category (from above)"
+label(data$marital)="What is your marital status?"
+label(data$rec_db)="Is participant willing to be added to the Research Recruitment Database?"
+label(data$consent_trackingparticipant_info_complete)="Complete?"
+label(data$moca_score_raw)="Raw Telephone MOCA score"
+label(data$moca_score_corr)="Corrected Telephone MOCA score"
+label(data$moca_cat)="Telephone MOCA categorization:"
+label(data$rand_moca)="ENTER Telephone MOCA score category (from above field)"
+label(data$caregiver_yn)="Do you have a caregiver who helps you take care of yourself?"
+label(data$cg_name)="Caregiver Name"
+label(data$cg_phone)="Caregiver Phone number"
+label(data$cg_email)="Caregiver Email"
+label(data$moca_notes)="Notes:"
+label(data$telephone_moca_complete)="Complete?"
+label(data$rand_date)="Date of Randomization"
+label(data$condition)="Randomization Group"
+label(data$randomization_complete)="Complete?"
+label(data$intvisit_sched)="Intervention group visit scheduled:"
+label(data$int_mail_dt)="Intervention materials mailed date"
+label(data$cont_mail_dt)="Control group materials mailed Date"
+label(data$attend_a)="Did participant attend session A?"
+label(data$sess_a)="Which session A did participant attend?"
+label(data$missed_a)="Reason for not attending Session A:"
+label(data$miss_a_oth)="Please specify"
+label(data$attend_b)="Did participant attend session B?"
+label(data$sess_b)="Which session B did participant attend?"
+label(data$missed_b)="Reason for not attending Session B:"
+label(data$miss_b_oth)="Please specify"
+label(data$sched_notes)="Notes"
+label(data$intervention_control_group_tracking_complete)="Complete?"
+label(data$drop_yn)=" Has participant dropped from study?"
+label(data$reason_drop)="Reason for withdrawal from study"
+label(data$withdraw_consent)="Did participant withdraw consent?"
+label(data$consent_with_doc)="Documentation of consent withdrawal"
+label(data$withdrawal_form_complete)="Complete?"
+label(data$sdh1___1)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Food)"
+label(data$sdh1___2)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Utilities)"
+label(data$sdh1___3)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Clothing)"
+label(data$sdh1___4)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Child care)"
+label(data$sdh1___5)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Medicine or any health care (medical, dental, mental health, vision))"
+label(data$sdh1___6)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Phone)"
+label(data$sdh1___7)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=Other)"
+label(data$sdh1___8)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=None of the above)"
+label(data$sdh1___9)="In the past year, have you or any family members you live with been unable to get any of the following when it was really needed? (select all that apply) (choice=I choose not to answer this question)"
+label(data$sdh2___0)="Has lack of transportation kept you from medical appointments, meetings, work or from getting things needed for daily living? (select all that apply) (choice=No)"
+label(data$sdh2___1)="Has lack of transportation kept you from medical appointments, meetings, work or from getting things needed for daily living? (select all that apply) (choice=Yes, it has kept me from medical appointments)"
+label(data$sdh2___2)="Has lack of transportation kept you from medical appointments, meetings, work or from getting things needed for daily living? (select all that apply) (choice=Yes, it has kept me from non-medical meetings, appointments, work, or from getting things that I need)"
+label(data$sdh2___3)="Has lack of transportation kept you from medical appointments, meetings, work or from getting things needed for daily living? (select all that apply) (choice=I choose not to answer this question)"
+label(data$scd1)=" Have you noticed changes or problems with your memory or thinking in the last 2 years?"
+label(data$scd2)=" Are you concerned about your memory or thinking?"
+label(data$scd3)=" Are changes in your memory making everyday life more challenging or difficult?"
+label(data$cogstat)="Cognitive Status (NIA)"
+label(data$global1)="1. In general, would you say your health is:"
+label(data$global2)="2. In general, would you say your quality of life is:"
+label(data$global3)="3. In general, how would you rate your physical health?"
+label(data$global4)="4. In general, how would you rate your mental health, including your mood and your ability to think?"
+label(data$global5)="5. In general, how would you rate your satisfaction with your social activities and relationships?"
+label(data$global6)="6. In general, please rate how well you carry out your usual social activities and roles. (This includes activities at home, at work and in your community, and responsibilities as a parent, child, spouse, employee, friend, etc.)"
+label(data$global7)="7. To what extent are you able to carry out your everyday physical activities such as walking, climbing stairs, carrying groceries, or moving a chair?"
+label(data$global8)="8. How often have you been bothered by emotional problems such as feeling anxious, depressed or irritable?"
+label(data$global9)="9. How would you rate your fatigue on average?"
+label(data$global10)="10. would you rate your pain on average?"
+label(data$social1)="1. Someone you can count on to listen to you when you need support"
+label(data$social2)="2. Someone to give you information to help you understand a situation"
+label(data$social3)="3. Someone to give you good advice about a crisis"
+label(data$social4)="4. Someone to confide in or talk to about yourself or your problems"
+label(data$social5)="5. Someone whose advice you really want"
+label(data$social6)="6. Someone to share your most private worries and fears with"
+label(data$social7)="7. Someone to turn to for suggestions about how to deal with a personal problem"
+label(data$social8)="8. Someone to help you if you were confined to bed"
+label(data$social9)="9. Someone to take you to the doctor if you needed it"
+label(data$social10)="10. Someone to prepare your meals if you were unable to do it yourself"
+label(data$social11)="11. Someone to help with daily chores if you were sick"
+label(data$patient_report_complete)="Complete?"
+label(data$prioracp1)="1. Have you made out a will saying how you want your property divided?"
+label(data$prioracp2)="2. Have you made funeral arrangements; such as pre-paying for a funeral, buying a burial plot, or making arrangements for cremation?"
+label(data$prioracp3)="3. Have you ever filled out an advance directive, living will, or durable power of attorney for healthcare? (If needed: These forms let you write down your wishes for medical care. Some people do not know if they filled them out and this is OK.)"
+label(data$prioracp4)="4. Have you ever had to make life threatening medical decisions for yourself; such as, whether to have major surgery (like open heart surgery); to be put on a breathing machine; or to go to the intensive care unit of the hospital?"
+label(data$prioracp5)="5. Have you ever had to make life threatening medical decisions for someone else; such as, whether they should have major surgery (like open heart surgery); be put on a breathing machine, or to go to the ICU because they were too sick to make their own decisions?"
+label(data$acpcomm1)="1. If you become too sick to make your own decisions, can you think of ANYONE in your life right now, such as family or friends, who MAY be able to help make medical decisions for you?"
+label(data$acpcomm2)="2. Do you have close friends or family that may have opinions about your medical care if you were to become sick?"
+label(data$acpcomm3)="3. Have you had discussions with a doctor about treatments you would want if you are too sick to speak for yourself?"
+label(data$acp_complete)="Complete?"
+label(data$acpred1)="1. How ready are you to sign official papers naming a medical decision maker to make medical decisions for you?"
+label(data$acpred2)="2. How ready are you to talk to your decision maker about the kind of medical care you would want if you were very sick or near the end of life?"
+label(data$acpred3)="3. How ready are you to talk to your doctor about the kind of medical care you would want if you were very sick or near the end of life?"
+label(data$acpred4)="4. How ready are you to sign official papers putting your wishes in writing about the kind of medical care you would want if you were very sick or near the end of life?"
+label(data$selfeff1)="1. Get the facts about the medication choices available to me"
+label(data$selfeff2)="2. Get the facts about the benefits of each choice"
+label(data$selfeff3)="3. Get the facts about the risks and side effects of each choice"
+label(data$selfeff4)="4. Understand the information enough to be able to make a choice"
+label(data$selfeff5)="5. Ask questions without feeling dumb"
+label(data$selfeff6)="6. Express my concerns about each choice"
+label(data$selfeff7)="7. Ask for advice"
+label(data$selfeff8)="8. Figure out the choice that best suits me"
+label(data$selfeff9)="9. Handle unwanted pressure from others in making my choice"
+label(data$selfeff10)="10. Let the clinic team know whats best for me"
+label(data$selfeff11)="11. Delay my decision if I feel I need more time"
+label(data$qcom1)="1. Using words that you can understand"
+label(data$qcom2)="2. Looking you in the eye"
+label(data$qcom3)="3. Answering all your questions about your illness and treatment"
+label(data$qcom4)="4. Listening to what you have to say"
+label(data$qcom5)="5. Caring about you as a person"
+label(data$qcom6)="6. Giving you his/her/their full attention"
+label(data$qcom7)="7. Has your primary care team, including your doctor, talked to you about your feelings concerning the possibility that you might get sicker?"
+label(data$qcom7b)="How good is the primary care team at talking with you about your feelings concerning the possibility that you might get sicker?"
+label(data$qcom8)="8. Has your primary care team, including your doctor, talked with you about the details concerning the possibility that you might get sicker?"
+label(data$qcom8b)="How good is the primary care team at talking with you about the details concerning the possibility that you might get sicker?"
+label(data$qcom9)="9. Has your primary care team, including your doctor, talked with you about how long you might have to live?"
+label(data$qcom_9b)="How good is the primary care team at talking to you about how long you might have to live?"
+label(data$qcom10)="10. Has your primary care team, including your doctor, talked with you about what dying might be like?"
+label(data$qcom_10b)="How good is the primary care team at talking about what dying might be like?"
+label(data$qcom11)="11. Has your primary care team, including your doctor, involved you in treatment discussions about your care?"
+label(data$qcom_11b)="How good is the primary care team at involving you in treatment discussions about your care?"
+label(data$qcom12)="12. Has your primary care team, including your doctor, asked about the things in life that are important to you?"
+label(data$qcom_12b)="How good is the primary care team at asking about the things in life that are important to you?"
+label(data$qcom13)="13. Has your primary care team, including your doctor, asked about your spiritual or religious beliefs?"
+label(data$qcom_13b)="How good is the primary care team at asking about your spiritual or religious beliefs?"
+label(data$outcomes_complete)="Complete?"
+label(data$survey_yn)="Survey Completed?"
+label(data$giftcard_accept)="Gift card accepted or declined?"
+label(data$giftcard_type)="Type of gift card"
+label(data$email_confirm)="Confirm email address:"
+label(data$address_confirm)="Confirm mailing address:"
+label(data$card_type)="Type of gift card:"
+label(data$giftcard_sent)="Gift card sent"
+label(data$giftcard_date)="Gift card sent date:"
+label(data$gift_card_tracking_complete)="Complete?"
+label(data$firstcall_2)="Date of First Recruitment Call"
+label(data$firstpra_2)="Person who called"
+label(data$call_outcome5)="First call outcome"
+label(data$secondcall_2)="Date of second call"
+label(data$secondpra_2)="Person who called"
+label(data$call_outcome6)="Second call outcome"
+label(data$caregiver_yn_2)="Would the caregiver like to participate in the study with participant?"
+label(data$cg_decline)="Reason for caregiver decline:"
+label(data$moca_notes_2)="Notes:"
+label(data$caregiver_recruitment_tracking_complete)="Complete?"
+label(data$screen_phone_2)="1. Do you have a phone to enable follow up?"
+label(data$phone3)="Best number to reach you"
+label(data$phone4)="Alternative number to reach you. "
+label(data$travel_visits_2)="2. Are you able to travel to clinic for the study on group visit days?"
+label(data$move_yn_2)="3. Do you plan to move away from the area in the next 6 months?"
+label(data$caregiver_eligibility_complete)="Complete?"
+label(data$verbal_consent_caregiver_complete)="Complete?"
+label(data$tback_q1_cg)="What is the study asking you to do? "
+label(data$tback_q2_cg)="What are the risks/side effects of being in this study? "
+label(data$tback_q3_cg)="Is the study voluntary? "
+label(data$tback_q4_cg)="What do you do if you have questions? "
+label(data$correct_cg)="Number of correct answers out of 4 at first attempt:"
+label(data$tback_q5_cg)="What is the study asking you to do? "
+label(data$tback_q6_cg)="What are the risks/side effects of being in this study? "
+label(data$tback_q7_cg)="Is the study voluntary? "
+label(data$tback_q8_cg)="What do you do if you have questions? "
+label(data$correct_2_cg)="Number of correct answers out of 4 at second attempt:"
+label(data$tback_q9_cg)="What is the study asking you to do? "
+label(data$tback_q10_cg)="What are the risks/side effects of being in this study? "
+label(data$tback_q11_cg)="Is the study voluntary? "
+label(data$tback_q12_cg)="What do you do if you have questions? "
+label(data$correct_3_cg)="Number of correct answers out of 4 at third attempt:"
+label(data$tback_q13_cg)="What is the study asking you to do? "
+label(data$tback_q14_cg)="What are the risks/side effects of being in this study? "
+label(data$tback_q15_cg)="Is the study voluntary? "
+label(data$tback_q17_cg)="What do you do if you have questions? "
+label(data$correct_4_cg)="Number of correct answers out of 4 at final attempt:"
+label(data$teachback_questions_caregiver_complete)="Complete?"
+label(data$gender_sp)="Gender"
+label(data$race_sp)="Race"
+label(data$ethnicity_sp)="Ethnicity"
+label(data$language_sp)="What language do you prefer?"
+label(data$education_sp)="What is your highest education level?"
+label(data$marital_sp)="What is your marital status?"
+label(data$caregiver_info_complete)="Complete?"
+label(data$interview_yn)="Interview Completed?"
+label(data$giftcard_accept_2)="Gift card accepted or declined?"
+label(data$giftcard_type_cg)="Type of gift card"
+label(data$email_confirm_cg)="Confirm email address:"
+label(data$address_confirm_cg)="Confirm mailing address:"
+label(data$card_type_cg)="Type of gift card:"
+label(data$giftcard_sent_cg)="Gift card sent"
+label(data$giftcard_date_cg)="Gift card sent date:"
+label(data$gift_card_tracking_caregiver_complete)="Complete?"
+label(data$ae_term)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit)="Visit:"
+label(data$ae_date)="Adverse Event Date:"
+label(data$ae_time)="Adverse Event Time:"
+label(data$ae_enddate)="Adverse Event End Date:"
+label(data$ae_endtime)="Adverse Event End Time:"
+label(data$ae_start)="Did AE start before study intervention?"
+label(data$ae_int)="Is AE intermittent?"
+label(data$ae_setting)="Setting"
+label(data$ae_class)="AE Classification"
+label(data$ae_nia_date)="Date AE report sent to NIA"
+label(data$sae_def)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date)="Date SAE report sent to NIA"
+label(data$ae_serious___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity)="Severity"
+label(data$ae_rel)="Relationship to Study Intervention "
+label(data$ae_action)="Action taken with study treatment "
+label(data$ae_int_des)="Please describe"
+label(data$ae_outcome)="Outcome"
+label(data$ae_end)="End date"
+label(data$ae_pi_sign)="PI Signature (Initial)"
+label(data$ae_term2)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit2)="Visit:"
+label(data$ae_date2)="Adverse Event Date:"
+label(data$ae_time2)="Adverse Event Time:"
+label(data$ae_enddate2)="Adverse Event End Date:"
+label(data$ae_endtime2)="Adverse Event End Time:"
+label(data$ae_start2)="Did AE start before study intervention?"
+label(data$ae_int2)="Is AE intermittent?"
+label(data$ae_setting2)="Setting"
+label(data$ae_class2)="AE Classification"
+label(data$ae_nia_date2)="Date AE report sent to NIA"
+label(data$sae_def2)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date2)="Date SAE report sent to NIA"
+label(data$ae_serious2___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious2___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious2___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious2___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious2___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity2)="Severity"
+label(data$ae_rel2)="Relationship to Study Intervention "
+label(data$ae_action2)="Action taken with study treatment "
+label(data$ae_int_des2)="Please describe"
+label(data$ae_outcome2)="Outcome"
+label(data$ae_end2)="End date"
+label(data$ae_pi_sign2)="PI Signature (Initial)"
+label(data$ae_term3)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit3)="Visit:"
+label(data$ae_date3)="Adverse Event Date:"
+label(data$ae_time3)="Adverse Event Time:"
+label(data$ae_enddate3)="Adverse Event End Date:"
+label(data$ae_endtime3)="Adverse Event End Time:"
+label(data$ae_start3)="Did AE start before study intervention?"
+label(data$ae_int3)="Is AE intermittent?"
+label(data$ae_setting3)="Setting"
+label(data$ae_class3)="AE Classification"
+label(data$ae_nia_date3)="Date AE report sent to NIA"
+label(data$sae_def3)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date3)="Date SAE report sent to NIA"
+label(data$ae_serious3___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious3___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious3___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious3___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious3___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity3)="Severity"
+label(data$ae_rel3)="Relationship to Study Intervention "
+label(data$ae_action3)="Action taken with study treatment "
+label(data$ae_int_des3)="Please describe"
+label(data$ae_outcome3)="Outcome"
+label(data$ae_end3)="End date"
+label(data$ae_pi_sign3)="PI Signature (Initial)"
+label(data$ae_term4)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit4)="Visit:"
+label(data$ae_date4)="Adverse Event Date:"
+label(data$ae_time4)="Adverse Event Time:"
+label(data$ae_enddate4)="Adverse Event End Date:"
+label(data$ae_endtime4)="Adverse Event End Time:"
+label(data$ae_start4)="Did AE start before study intervention?"
+label(data$ae_int4)="Is AE intermittent?"
+label(data$ae_setting4)="Setting"
+label(data$ae_class4)="AE Classification"
+label(data$ae_nia_date4)="Date AE report sent to NIA"
+label(data$sae_def4)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date4)="Date SAE report sent to NIA"
+label(data$ae_serious4___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious4___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious4___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious4___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious4___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity4)="Severity"
+label(data$ae_rel4)="Relationship to Study Intervention "
+label(data$ae_action4)="Action taken with study treatment "
+label(data$ae_int_des4)="Please describe"
+label(data$ae_outcome4)="Outcome"
+label(data$ae_end4)="End date"
+label(data$ae_pi_sign4)="PI Signature (Initial)"
+label(data$ae_term5)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit5)="Visit:"
+label(data$ae_date5)="Adverse Event Date:"
+label(data$ae_time5)="Adverse Event Time:"
+label(data$ae_enddate5)="Adverse Event End Date:"
+label(data$ae_endtime5)="Adverse Event End Time:"
+label(data$ae_start5)="Did AE start before study intervention?"
+label(data$ae_int5)="Is AE intermittent?"
+label(data$ae_setting5)="Setting"
+label(data$ae_class5)="AE Classification"
+label(data$ae_nia_date5)="Date AE report sent to NIA"
+label(data$sae_def5)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date5)="Date SAE report sent to NIA"
+label(data$ae_serious5___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious5___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious5___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious5___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious5___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity5)="Severity"
+label(data$ae_rel5)="Relationship to Study Intervention "
+label(data$ae_action5)="Action taken with study treatment "
+label(data$ae_int_des5)="Please describe"
+label(data$ae_outcome5)="Outcome"
+label(data$ae_end5)="End date"
+label(data$ae_pi_sign5)="PI Signature (Initial)"
+label(data$adverse_events_participant_complete)="Complete?"
+label(data$ae_term_cg)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit_cg)="Visit:"
+label(data$ae_date_cg)="Adverse Event Date:"
+label(data$ae_time_cg)="Adverse Event Time:"
+label(data$ae_enddate_cg)="Adverse Event End Date:"
+label(data$ae_endtime_cg)="Adverse Event End Time:"
+label(data$ae_start_cg)="Did AE start before study intervention?"
+label(data$ae_int_cg)="Is AE intermittent?"
+label(data$ae_setting_cg)="Setting"
+label(data$ae_class_cg)="AE Classification"
+label(data$ae_nia_date_cg)="Date AE report sent to NIA"
+label(data$sae_def_cg)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date_cg)="Date SAE report sent to NIA"
+label(data$ae_serious_cg___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious_cg___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious_cg___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious_cg___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious_cg___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity_cg)="Severity"
+label(data$ae_rel_cg)="Relationship to Study Intervention "
+label(data$ae_action_cg)="Action taken with study treatment "
+label(data$ae_int_des_cg)="Please describe"
+label(data$ae_outcome_cg)="Outcome"
+label(data$ae_end_cg)="End date"
+label(data$ae_pi_sign_cg)="PI Signature (Initial)"
+label(data$ae_term2_cg)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit2_cg)="Visit:"
+label(data$ae_date2_cg)="Adverse Event Date:"
+label(data$ae_time2_cg)="Adverse Event Time:"
+label(data$ae_enddate2_cg)="Adverse Event End Date:"
+label(data$ae_start2_cg)="Did AE start before study intervention?"
+label(data$ae_endtime2_cg)="Adverse Event End Time:"
+label(data$ae_int2_cg)="Is AE intermittent?"
+label(data$ae_setting2_cg)="Setting"
+label(data$ae_class2_cg)="AE Classification"
+label(data$ae_nia_date2_cg)="Date AE report sent to NIA"
+label(data$sae_def2_cg)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date2_cg)="Date SAE report sent to NIA"
+label(data$ae_serious2_cg___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious2_cg___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious2_cg___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious2_cg___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious2_cg___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity2_cg)="Severity"
+label(data$ae_rel2_cg)="Relationship to Study Intervention "
+label(data$ae_action2_cg)="Action taken with study treatment "
+label(data$ae_int_des2_cg)="Please describe"
+label(data$ae_outcome2_cg)="Outcome"
+label(data$ae_end2_cg)="End date"
+label(data$ae_pi_sign2_cg)="PI Signature (Initial)"
+label(data$ae_term3_cg)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit3_cg)="Visit:"
+label(data$ae_date3_cg)="Adverse Event Date:"
+label(data$ae_time3_cg)="Adverse Event Time:"
+label(data$ae_enddate3_cg)="Adverse Event End Date:"
+label(data$ae_endtime3_cg)="Adverse Event End Time:"
+label(data$ae_start3_cg)="Did AE start before study intervention?"
+label(data$ae_int3_cg)="Is AE intermittent?"
+label(data$ae_setting3_cg)="Setting"
+label(data$ae_class3_cg)="AE Classification"
+label(data$ae_nia_date3_cg)="Date AE report sent to NIA"
+label(data$sae_def3_cg)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date3_cg)="Date SAE report sent to NIA"
+label(data$ae_serious3_cg___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious3_cg___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious3_cg___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious3_cg___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious3_cg___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity3_cg)="Severity"
+label(data$ae_rel3_cg)="Relationship to Study Intervention "
+label(data$ae_action3_cg)="Action taken with study treatment "
+label(data$ae_int_des3_cg)="Please describe"
+label(data$ae_outcome3_cg)="Outcome"
+label(data$ae_end3_cg)="End date"
+label(data$ae_pi_sign3_cg)="PI Signature (Initial)"
+label(data$ae_term4_cg)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit4_cg)="Visit:"
+label(data$ae_date4_cg)="Adverse Event Date:"
+label(data$ae_time4_cg)="Adverse Event Time:"
+label(data$ae_enddate4_cg)="Adverse Event End Date:"
+label(data$ae_endtime4_cg)="Adverse Event End Time:"
+label(data$ae_start4_cg)="Did AE start before study intervention?"
+label(data$ae_int4_cg)="Is AE intermittent?"
+label(data$ae_setting4_cg)="Setting"
+label(data$ae_class4_cg)="AE Classification"
+label(data$ae_nia_date4_cg)="Date AE report sent to NIA"
+label(data$sae_def4_cg)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date4_cg)="Date SAE report sent to NIA"
+label(data$ae_serious4_cg___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious4_cg___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious4_cg___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious4_cg___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious4_cg___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity4_cg)="Severity"
+label(data$ae_rel4_cg)="Relationship to Study Intervention "
+label(data$ae_action4_cg)="Action taken with study treatment "
+label(data$ae_int_des4_cg)="Please describe"
+label(data$ae_outcome4_cg)="Outcome"
+label(data$ae_end4_cg)="End date"
+label(data$ae_pi_sign4_cg)="PI Signature (Initial)"
+label(data$ae_term5_cg)="Adverse event term (including COVID-19 diagnosis within 7 days of group visit)"
+label(data$ae_visit5_cg)="Visit:"
+label(data$ae_date5_cg)="Adverse Event Date:"
+label(data$ae_time5_cg)="Adverse Event Time:"
+label(data$ae_enddate5_cg)="Adverse Event End Date:"
+label(data$ae_endtime5_cg)="Adverse Event End Time:"
+label(data$ae_start5_cg)="Did AE start before study intervention?"
+label(data$ae_int5_cg)="Is AE intermittent?"
+label(data$ae_setting5_cg)="Setting"
+label(data$ae_class5_cg)="AE Classification"
+label(data$ae_nia_date5_cg)="Date AE report sent to NIA"
+label(data$sae_def5_cg)="Does AE meet the definition of an SAE? "
+label(data$sae_nia_date5_cg)="Date SAE report sent to NIA"
+label(data$ae_serious5_cg___1)="Seriousness criteria (check all that apply) (choice=Death)"
+label(data$ae_serious5_cg___2)="Seriousness criteria (check all that apply) (choice=Life threatening health event)"
+label(data$ae_serious5_cg___3)="Seriousness criteria (check all that apply) (choice=Acute illness causing hospitalization)"
+label(data$ae_serious5_cg___4)="Seriousness criteria (check all that apply) (choice=Health event causing persistent new disability)"
+label(data$ae_serious5_cg___5)="Seriousness criteria (check all that apply) (choice=Other medically important serious event)"
+label(data$ae_severity5_cg)="Severity"
+label(data$ae_rel5_cg)="Relationship to Study Intervention "
+label(data$ae_action5_cg)="Action taken with study treatment "
+label(data$ae_int_des5_cg)="Please describe"
+label(data$ae_outcome5_cg)="Outcome"
+label(data$ae_end5_cg)="End date"
+label(data$ae_pi_sign5_cg)="PI Signature (Initial)"
+label(data$adverse_events_caregiver_complete)="Complete?"
+#Setting Units
+
+
+#Setting Factors(will create new variable for factors)
+data$redcap_event_name.factor = factor(data$redcap_event_name,levels=c("screening_arm_1","baseline_arm_1","six_months_arm_1"))
+data$site.factor = factor(data$site,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$language.factor = factor(data$language,levels=c("1","2","3"))
+data$race.factor = factor(data$race,levels=c("1","2","3","4","5","6","7"))
+data$ethnicity.factor = factor(data$ethnicity,levels=c("1","2","3"))
+data$gender.factor = factor(data$gender,levels=c("1","2","3","4","5","6"))
+data$ehr_demographic_data_complete.factor = factor(data$ehr_demographic_data_complete,levels=c("0","1","2"))
+data$pra_assign.factor = factor(data$pra_assign,levels=c("1","2","3","4","5"))
+data$firstpra.factor = factor(data$firstpra,levels=c("1","2","3","4","5","9"))
+data$call_outcome1.factor = factor(data$call_outcome1,levels=c("1","2","3","4"))
+data$secondpra.factor = factor(data$secondpra,levels=c("1","2","3","4","5","9"))
+data$call_outcome2.factor = factor(data$call_outcome2,levels=c("1","2","3","4"))
+data$thirdpra.factor = factor(data$thirdpra,levels=c("1","2","3","4","5","9"))
+data$call_outcome3.factor = factor(data$call_outcome3,levels=c("1","2","3","4"))
+data$recruitment_tracking_complete.factor = factor(data$recruitment_tracking_complete,levels=c("0","1","2"))
+data$screen_phone.factor = factor(data$screen_phone,levels=c("1","2"))
+data$travel_visits.factor = factor(data$travel_visits,levels=c("1","2"))
+data$move_yn.factor = factor(data$move_yn,levels=c("1","0"))
+data$spouse.factor = factor(data$spouse,levels=c("1","0"))
+data$cg_status.factor = factor(data$cg_status,levels=c("1","0"))
+data$screen_outcome.factor = factor(data$screen_outcome,levels=c("1","2","8","3","4","5","6","7"))
+data$decline.factor = factor(data$decline,levels=c("1","2","3","4","5","6"))
+data$decline_2___1.factor = factor(data$decline_2___1,levels=c("0","1"))
+data$decline_2___2.factor = factor(data$decline_2___2,levels=c("0","1"))
+data$decline_2___3.factor = factor(data$decline_2___3,levels=c("0","1"))
+data$decline_2___4.factor = factor(data$decline_2___4,levels=c("0","1"))
+data$decline_2___5.factor = factor(data$decline_2___5,levels=c("0","1"))
+data$decline_2___6.factor = factor(data$decline_2___6,levels=c("0","1"))
+data$contact_later.factor = factor(data$contact_later,levels=c("1","0"))
+data$participant_eligibility_survey_phone_screening_complete.factor = factor(data$participant_eligibility_survey_phone_screening_complete,levels=c("0","1","2"))
+data$verbal_consent_complete.factor = factor(data$verbal_consent_complete,levels=c("0","1","2"))
+data$tback_q1.factor = factor(data$tback_q1,levels=c("1","2"))
+data$tback_q2.factor = factor(data$tback_q2,levels=c("1","2"))
+data$tback_q3.factor = factor(data$tback_q3,levels=c("1","2"))
+data$tback_q4.factor = factor(data$tback_q4,levels=c("1","2"))
+data$tback_q5.factor = factor(data$tback_q5,levels=c("1","2"))
+data$tback_q6.factor = factor(data$tback_q6,levels=c("1","2"))
+data$tback_q7.factor = factor(data$tback_q7,levels=c("1","2"))
+data$tback_q8.factor = factor(data$tback_q8,levels=c("1","2"))
+data$tback_q9.factor = factor(data$tback_q9,levels=c("1","2"))
+data$tback_q10.factor = factor(data$tback_q10,levels=c("1","2"))
+data$tback_q11.factor = factor(data$tback_q11,levels=c("1","2"))
+data$tback_q12.factor = factor(data$tback_q12,levels=c("1","2"))
+data$tback_q13.factor = factor(data$tback_q13,levels=c("1","2"))
+data$tback_q14.factor = factor(data$tback_q14,levels=c("1","2"))
+data$tback_q15.factor = factor(data$tback_q15,levels=c("1","2"))
+data$tback_q17.factor = factor(data$tback_q17,levels=c("1","2"))
+data$teachback_questions_complete.factor = factor(data$teachback_questions_complete,levels=c("0","1","2"))
+data$consented.factor = factor(data$consented,levels=c("1","0"))
+data$gender_id_pt.factor = factor(data$gender_id_pt,levels=c("1","2","3","4","5","6"))
+data$race_2.factor = factor(data$race_2,levels=c("1","2","3","4","5","6","7"))
+data$ethnicity_2.factor = factor(data$ethnicity_2,levels=c("1","2","3"))
+data$education.factor = factor(data$education,levels=c("1","2","3","4","5","6"))
+data$educat_rand.factor = factor(data$educat_rand,levels=c("1","2"))
+data$marital.factor = factor(data$marital,levels=c("1","2","3","4","5","6","7"))
+data$rec_db.factor = factor(data$rec_db,levels=c("1","0"))
+data$consent_trackingparticipant_info_complete.factor = factor(data$consent_trackingparticipant_info_complete,levels=c("0","1","2"))
+data$rand_moca.factor = factor(data$rand_moca,levels=c("1","2"))
+data$caregiver_yn.factor = factor(data$caregiver_yn,levels=c("1","0"))
+data$telephone_moca_complete.factor = factor(data$telephone_moca_complete,levels=c("0","1","2"))
+data$condition.factor = factor(data$condition,levels=c("1","2"))
+data$randomization_complete.factor = factor(data$randomization_complete,levels=c("0","1","2"))
+data$intvisit_sched.factor = factor(data$intvisit_sched,levels=c("1","2","3","4","99"))
+data$attend_a.factor = factor(data$attend_a,levels=c("1","0"))
+data$missed_a.factor = factor(data$missed_a,levels=c("1","2","3","4","5","6","7","8","9"))
+data$attend_b.factor = factor(data$attend_b,levels=c("1","0"))
+data$missed_b.factor = factor(data$missed_b,levels=c("1","2","3","4","5","6","7","8","9"))
+data$intervention_control_group_tracking_complete.factor = factor(data$intervention_control_group_tracking_complete,levels=c("0","1","2"))
+data$drop_yn.factor = factor(data$drop_yn,levels=c("1","0"))
+data$reason_drop.factor = factor(data$reason_drop,levels=c("1","2","3","4","5"))
+data$withdraw_consent.factor = factor(data$withdraw_consent,levels=c("1","0"))
+data$withdrawal_form_complete.factor = factor(data$withdrawal_form_complete,levels=c("0","1","2"))
+data$sdh1___1.factor = factor(data$sdh1___1,levels=c("0","1"))
+data$sdh1___2.factor = factor(data$sdh1___2,levels=c("0","1"))
+data$sdh1___3.factor = factor(data$sdh1___3,levels=c("0","1"))
+data$sdh1___4.factor = factor(data$sdh1___4,levels=c("0","1"))
+data$sdh1___5.factor = factor(data$sdh1___5,levels=c("0","1"))
+data$sdh1___6.factor = factor(data$sdh1___6,levels=c("0","1"))
+data$sdh1___7.factor = factor(data$sdh1___7,levels=c("0","1"))
+data$sdh1___8.factor = factor(data$sdh1___8,levels=c("0","1"))
+data$sdh1___9.factor = factor(data$sdh1___9,levels=c("0","1"))
+data$sdh2___0.factor = factor(data$sdh2___0,levels=c("0","1"))
+data$sdh2___1.factor = factor(data$sdh2___1,levels=c("0","1"))
+data$sdh2___2.factor = factor(data$sdh2___2,levels=c("0","1"))
+data$sdh2___3.factor = factor(data$sdh2___3,levels=c("0","1"))
+data$scd1.factor = factor(data$scd1,levels=c("0","1","2"))
+data$scd2.factor = factor(data$scd2,levels=c("0","1","2"))
+data$scd3.factor = factor(data$scd3,levels=c("0","1","2"))
+data$global1.factor = factor(data$global1,levels=c("5","4","3","2","1"))
+data$global2.factor = factor(data$global2,levels=c("5","4","3","2","1"))
+data$global3.factor = factor(data$global3,levels=c("5","4","3","2","1"))
+data$global4.factor = factor(data$global4,levels=c("5","4","3","2","1"))
+data$global5.factor = factor(data$global5,levels=c("5","4","3","2","1"))
+data$global6.factor = factor(data$global6,levels=c("5","4","3","2","1"))
+data$global7.factor = factor(data$global7,levels=c("5","4","3","2","1"))
+data$global8.factor = factor(data$global8,levels=c("5","4","3","2","1"))
+data$global9.factor = factor(data$global9,levels=c("5","4","3","2","1"))
+data$global10.factor = factor(data$global10,levels=c("0","1","2","3","4","5","6","7","8","9","10"))
+data$social1.factor = factor(data$social1,levels=c("1","2","3","4","5","8","9"))
+data$social2.factor = factor(data$social2,levels=c("1","2","3","4","5","8","9"))
+data$social3.factor = factor(data$social3,levels=c("1","2","3","4","5","8","9"))
+data$social4.factor = factor(data$social4,levels=c("1","2","3","4","5","8","9"))
+data$social5.factor = factor(data$social5,levels=c("1","2","3","4","5","8","9"))
+data$social6.factor = factor(data$social6,levels=c("1","2","3","4","5","8","9"))
+data$social7.factor = factor(data$social7,levels=c("1","2","3","4","5","8","9"))
+data$social8.factor = factor(data$social8,levels=c("1","2","3","4","5","8","9"))
+data$social9.factor = factor(data$social9,levels=c("1","2","3","4","5","8","9"))
+data$social10.factor = factor(data$social10,levels=c("1","2","3","4","5","8","9"))
+data$social11.factor = factor(data$social11,levels=c("1","2","3","4","5","8","9"))
+data$patient_report_complete.factor = factor(data$patient_report_complete,levels=c("0","1","2"))
+data$prioracp1.factor = factor(data$prioracp1,levels=c("1","0","2","3"))
+data$prioracp2.factor = factor(data$prioracp2,levels=c("1","0","2","3"))
+data$prioracp3.factor = factor(data$prioracp3,levels=c("1","0","2","3"))
+data$prioracp4.factor = factor(data$prioracp4,levels=c("1","0","2","3"))
+data$prioracp5.factor = factor(data$prioracp5,levels=c("1","0","2","3"))
+data$acpcomm1.factor = factor(data$acpcomm1,levels=c("1","2","0","3"))
+data$acpcomm2.factor = factor(data$acpcomm2,levels=c("1","2","0","3"))
+data$acpcomm3.factor = factor(data$acpcomm3,levels=c("1","2","0","3"))
+data$acp_complete.factor = factor(data$acp_complete,levels=c("0","1","2"))
+data$acpred1.factor = factor(data$acpred1,levels=c("1","2","3","4","5","6"))
+data$acpred2.factor = factor(data$acpred2,levels=c("1","2","3","4","5","6"))
+data$acpred3.factor = factor(data$acpred3,levels=c("1","2","3","4","5","6"))
+data$acpred4.factor = factor(data$acpred4,levels=c("1","2","3","4","5","6"))
+data$selfeff1.factor = factor(data$selfeff1,levels=c("0","1","2","3","4"))
+data$selfeff2.factor = factor(data$selfeff2,levels=c("0","1","2","3","4"))
+data$selfeff3.factor = factor(data$selfeff3,levels=c("0","1","2","3","4"))
+data$selfeff4.factor = factor(data$selfeff4,levels=c("0","1","2","3","4"))
+data$selfeff5.factor = factor(data$selfeff5,levels=c("0","1","2","3","4"))
+data$selfeff6.factor = factor(data$selfeff6,levels=c("0","1","2","3","4"))
+data$selfeff7.factor = factor(data$selfeff7,levels=c("0","1","2","3","4"))
+data$selfeff8.factor = factor(data$selfeff8,levels=c("0","1","2","3","4"))
+data$selfeff9.factor = factor(data$selfeff9,levels=c("0","1","2","3","4"))
+data$selfeff10.factor = factor(data$selfeff10,levels=c("0","1","2","3","4"))
+data$selfeff11.factor = factor(data$selfeff11,levels=c("0","1","2","3","4"))
+data$qcom1.factor = factor(data$qcom1,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom2.factor = factor(data$qcom2,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom3.factor = factor(data$qcom3,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom4.factor = factor(data$qcom4,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom5.factor = factor(data$qcom5,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom6.factor = factor(data$qcom6,levels=c("0","1","2","3","4","5","6","7","8","9","10","11","12"))
+data$qcom7.factor = factor(data$qcom7,levels=c("1","0"))
+data$qcom7b.factor = factor(data$qcom7b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom8.factor = factor(data$qcom8,levels=c("1","0"))
+data$qcom8b.factor = factor(data$qcom8b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom9.factor = factor(data$qcom9,levels=c("1","0"))
+data$qcom_9b.factor = factor(data$qcom_9b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom10.factor = factor(data$qcom10,levels=c("1","0"))
+data$qcom_10b.factor = factor(data$qcom_10b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom11.factor = factor(data$qcom11,levels=c("1","0"))
+data$qcom_11b.factor = factor(data$qcom_11b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom12.factor = factor(data$qcom12,levels=c("1","0"))
+data$qcom_12b.factor = factor(data$qcom_12b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$qcom13.factor = factor(data$qcom13,levels=c("1","0"))
+data$qcom_13b.factor = factor(data$qcom_13b,levels=c("0","1","2","3","4","5","6","7","8","9","10","12"))
+data$outcomes_complete.factor = factor(data$outcomes_complete,levels=c("0","1","2"))
+data$survey_yn.factor = factor(data$survey_yn,levels=c("1","0"))
+data$giftcard_accept.factor = factor(data$giftcard_accept,levels=c("1","0"))
+data$giftcard_type.factor = factor(data$giftcard_type,levels=c("1","2"))
+data$card_type.factor = factor(data$card_type,levels=c("1","2","3"))
+data$giftcard_sent.factor = factor(data$giftcard_sent,levels=c("1","2"))
+data$gift_card_tracking_complete.factor = factor(data$gift_card_tracking_complete,levels=c("0","1","2"))
+data$firstpra_2.factor = factor(data$firstpra_2,levels=c("1","2","3","4"))
+data$call_outcome5.factor = factor(data$call_outcome5,levels=c("1","2","3","4"))
+data$secondpra_2.factor = factor(data$secondpra_2,levels=c("1","2","3","4"))
+data$call_outcome6.factor = factor(data$call_outcome6,levels=c("1","2","3","4"))
+data$caregiver_yn_2.factor = factor(data$caregiver_yn_2,levels=c("1","0"))
+data$cg_decline.factor = factor(data$cg_decline,levels=c("1","2","3","4"))
+data$caregiver_recruitment_tracking_complete.factor = factor(data$caregiver_recruitment_tracking_complete,levels=c("0","1","2"))
+data$screen_phone_2.factor = factor(data$screen_phone_2,levels=c("1","2"))
+data$travel_visits_2.factor = factor(data$travel_visits_2,levels=c("1","2"))
+data$move_yn_2.factor = factor(data$move_yn_2,levels=c("1","0"))
+data$caregiver_eligibility_complete.factor = factor(data$caregiver_eligibility_complete,levels=c("0","1","2"))
+data$verbal_consent_caregiver_complete.factor = factor(data$verbal_consent_caregiver_complete,levels=c("0","1","2"))
+data$tback_q1_cg.factor = factor(data$tback_q1_cg,levels=c("1","2"))
+data$tback_q2_cg.factor = factor(data$tback_q2_cg,levels=c("1","2"))
+data$tback_q3_cg.factor = factor(data$tback_q3_cg,levels=c("1","2"))
+data$tback_q4_cg.factor = factor(data$tback_q4_cg,levels=c("1","2"))
+data$tback_q5_cg.factor = factor(data$tback_q5_cg,levels=c("1","2"))
+data$tback_q6_cg.factor = factor(data$tback_q6_cg,levels=c("1","2"))
+data$tback_q7_cg.factor = factor(data$tback_q7_cg,levels=c("1","2"))
+data$tback_q8_cg.factor = factor(data$tback_q8_cg,levels=c("1","2"))
+data$tback_q9_cg.factor = factor(data$tback_q9_cg,levels=c("1","2"))
+data$tback_q10_cg.factor = factor(data$tback_q10_cg,levels=c("1","2"))
+data$tback_q11_cg.factor = factor(data$tback_q11_cg,levels=c("1","2"))
+data$tback_q12_cg.factor = factor(data$tback_q12_cg,levels=c("1","2"))
+data$tback_q13_cg.factor = factor(data$tback_q13_cg,levels=c("1","2"))
+data$tback_q14_cg.factor = factor(data$tback_q14_cg,levels=c("1","2"))
+data$tback_q15_cg.factor = factor(data$tback_q15_cg,levels=c("1","2"))
+data$tback_q17_cg.factor = factor(data$tback_q17_cg,levels=c("1","2"))
+data$teachback_questions_caregiver_complete.factor = factor(data$teachback_questions_caregiver_complete,levels=c("0","1","2"))
+data$gender_sp.factor = factor(data$gender_sp,levels=c("1","2","3","4","5","6"))
+data$race_sp.factor = factor(data$race_sp,levels=c("1","2","3","4","5","6","7"))
+data$ethnicity_sp.factor = factor(data$ethnicity_sp,levels=c("1","2","3"))
+data$language_sp.factor = factor(data$language_sp,levels=c("1","2","3"))
+data$education_sp.factor = factor(data$education_sp,levels=c("1","2","3","4","5","6"))
+data$marital_sp.factor = factor(data$marital_sp,levels=c("1","2","3","4","5","6","7"))
+data$caregiver_info_complete.factor = factor(data$caregiver_info_complete,levels=c("0","1","2"))
+data$interview_yn.factor = factor(data$interview_yn,levels=c("1","0"))
+data$giftcard_accept_2.factor = factor(data$giftcard_accept_2,levels=c("1","0"))
+data$giftcard_type_cg.factor = factor(data$giftcard_type_cg,levels=c("1","2"))
+data$card_type_cg.factor = factor(data$card_type_cg,levels=c("1","2","3"))
+data$giftcard_sent_cg.factor = factor(data$giftcard_sent_cg,levels=c("1","2"))
+data$gift_card_tracking_caregiver_complete.factor = factor(data$gift_card_tracking_caregiver_complete,levels=c("0","1","2"))
+data$ae_visit.factor = factor(data$ae_visit,levels=c("1","2"))
+data$ae_start.factor = factor(data$ae_start,levels=c("1","0"))
+data$ae_int.factor = factor(data$ae_int,levels=c("1","0"))
+data$ae_setting.factor = factor(data$ae_setting,levels=c("1","2"))
+data$ae_class.factor = factor(data$ae_class,levels=c("1","2"))
+data$sae_def.factor = factor(data$sae_def,levels=c("1","0"))
+data$ae_serious___1.factor = factor(data$ae_serious___1,levels=c("0","1"))
+data$ae_serious___2.factor = factor(data$ae_serious___2,levels=c("0","1"))
+data$ae_serious___3.factor = factor(data$ae_serious___3,levels=c("0","1"))
+data$ae_serious___4.factor = factor(data$ae_serious___4,levels=c("0","1"))
+data$ae_serious___5.factor = factor(data$ae_serious___5,levels=c("0","1"))
+data$ae_severity.factor = factor(data$ae_severity,levels=c("1","2","3"))
+data$ae_rel.factor = factor(data$ae_rel,levels=c("1","2","3","4","5"))
+data$ae_action.factor = factor(data$ae_action,levels=c("1","2","3"))
+data$ae_outcome.factor = factor(data$ae_outcome,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit2.factor = factor(data$ae_visit2,levels=c("1","2"))
+data$ae_start2.factor = factor(data$ae_start2,levels=c("1","0"))
+data$ae_int2.factor = factor(data$ae_int2,levels=c("1","0"))
+data$ae_setting2.factor = factor(data$ae_setting2,levels=c("1","2"))
+data$ae_class2.factor = factor(data$ae_class2,levels=c("1","2"))
+data$sae_def2.factor = factor(data$sae_def2,levels=c("1","0"))
+data$ae_serious2___1.factor = factor(data$ae_serious2___1,levels=c("0","1"))
+data$ae_serious2___2.factor = factor(data$ae_serious2___2,levels=c("0","1"))
+data$ae_serious2___3.factor = factor(data$ae_serious2___3,levels=c("0","1"))
+data$ae_serious2___4.factor = factor(data$ae_serious2___4,levels=c("0","1"))
+data$ae_serious2___5.factor = factor(data$ae_serious2___5,levels=c("0","1"))
+data$ae_severity2.factor = factor(data$ae_severity2,levels=c("1","2","3"))
+data$ae_rel2.factor = factor(data$ae_rel2,levels=c("1","2","3","4","5"))
+data$ae_action2.factor = factor(data$ae_action2,levels=c("1","2","3"))
+data$ae_outcome2.factor = factor(data$ae_outcome2,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit3.factor = factor(data$ae_visit3,levels=c("1","2"))
+data$ae_start3.factor = factor(data$ae_start3,levels=c("1","0"))
+data$ae_int3.factor = factor(data$ae_int3,levels=c("1","0"))
+data$ae_setting3.factor = factor(data$ae_setting3,levels=c("1","2"))
+data$ae_class3.factor = factor(data$ae_class3,levels=c("1","2"))
+data$sae_def3.factor = factor(data$sae_def3,levels=c("1","0"))
+data$ae_serious3___1.factor = factor(data$ae_serious3___1,levels=c("0","1"))
+data$ae_serious3___2.factor = factor(data$ae_serious3___2,levels=c("0","1"))
+data$ae_serious3___3.factor = factor(data$ae_serious3___3,levels=c("0","1"))
+data$ae_serious3___4.factor = factor(data$ae_serious3___4,levels=c("0","1"))
+data$ae_serious3___5.factor = factor(data$ae_serious3___5,levels=c("0","1"))
+data$ae_severity3.factor = factor(data$ae_severity3,levels=c("1","2","3"))
+data$ae_rel3.factor = factor(data$ae_rel3,levels=c("1","2","3","4","5"))
+data$ae_action3.factor = factor(data$ae_action3,levels=c("1","2","3"))
+data$ae_outcome3.factor = factor(data$ae_outcome3,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit4.factor = factor(data$ae_visit4,levels=c("1","2"))
+data$ae_start4.factor = factor(data$ae_start4,levels=c("1","0"))
+data$ae_int4.factor = factor(data$ae_int4,levels=c("1","0"))
+data$ae_setting4.factor = factor(data$ae_setting4,levels=c("1","2"))
+data$ae_class4.factor = factor(data$ae_class4,levels=c("1","2"))
+data$sae_def4.factor = factor(data$sae_def4,levels=c("1","0"))
+data$ae_serious4___1.factor = factor(data$ae_serious4___1,levels=c("0","1"))
+data$ae_serious4___2.factor = factor(data$ae_serious4___2,levels=c("0","1"))
+data$ae_serious4___3.factor = factor(data$ae_serious4___3,levels=c("0","1"))
+data$ae_serious4___4.factor = factor(data$ae_serious4___4,levels=c("0","1"))
+data$ae_serious4___5.factor = factor(data$ae_serious4___5,levels=c("0","1"))
+data$ae_severity4.factor = factor(data$ae_severity4,levels=c("1","2","3"))
+data$ae_rel4.factor = factor(data$ae_rel4,levels=c("1","2","3","4","5"))
+data$ae_action4.factor = factor(data$ae_action4,levels=c("1","2","3"))
+data$ae_outcome4.factor = factor(data$ae_outcome4,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit5.factor = factor(data$ae_visit5,levels=c("1","2"))
+data$ae_start5.factor = factor(data$ae_start5,levels=c("1","0"))
+data$ae_int5.factor = factor(data$ae_int5,levels=c("1","0"))
+data$ae_setting5.factor = factor(data$ae_setting5,levels=c("1","2"))
+data$ae_class5.factor = factor(data$ae_class5,levels=c("1","2"))
+data$sae_def5.factor = factor(data$sae_def5,levels=c("1","0"))
+data$ae_serious5___1.factor = factor(data$ae_serious5___1,levels=c("0","1"))
+data$ae_serious5___2.factor = factor(data$ae_serious5___2,levels=c("0","1"))
+data$ae_serious5___3.factor = factor(data$ae_serious5___3,levels=c("0","1"))
+data$ae_serious5___4.factor = factor(data$ae_serious5___4,levels=c("0","1"))
+data$ae_serious5___5.factor = factor(data$ae_serious5___5,levels=c("0","1"))
+data$ae_severity5.factor = factor(data$ae_severity5,levels=c("1","2","3"))
+data$ae_rel5.factor = factor(data$ae_rel5,levels=c("1","2","3","4","5"))
+data$ae_action5.factor = factor(data$ae_action5,levels=c("1","2","3"))
+data$ae_outcome5.factor = factor(data$ae_outcome5,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$adverse_events_participant_complete.factor = factor(data$adverse_events_participant_complete,levels=c("0","1","2"))
+data$ae_visit_cg.factor = factor(data$ae_visit_cg,levels=c("1","2"))
+data$ae_start_cg.factor = factor(data$ae_start_cg,levels=c("1","0"))
+data$ae_int_cg.factor = factor(data$ae_int_cg,levels=c("1","0"))
+data$ae_setting_cg.factor = factor(data$ae_setting_cg,levels=c("1","2"))
+data$ae_class_cg.factor = factor(data$ae_class_cg,levels=c("1","2"))
+data$sae_def_cg.factor = factor(data$sae_def_cg,levels=c("1","0"))
+data$ae_serious_cg___1.factor = factor(data$ae_serious_cg___1,levels=c("0","1"))
+data$ae_serious_cg___2.factor = factor(data$ae_serious_cg___2,levels=c("0","1"))
+data$ae_serious_cg___3.factor = factor(data$ae_serious_cg___3,levels=c("0","1"))
+data$ae_serious_cg___4.factor = factor(data$ae_serious_cg___4,levels=c("0","1"))
+data$ae_serious_cg___5.factor = factor(data$ae_serious_cg___5,levels=c("0","1"))
+data$ae_severity_cg.factor = factor(data$ae_severity_cg,levels=c("1","2","3"))
+data$ae_rel_cg.factor = factor(data$ae_rel_cg,levels=c("1","2","3","4","5"))
+data$ae_action_cg.factor = factor(data$ae_action_cg,levels=c("1","2","3"))
+data$ae_outcome_cg.factor = factor(data$ae_outcome_cg,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit2_cg.factor = factor(data$ae_visit2_cg,levels=c("1","2"))
+data$ae_start2_cg.factor = factor(data$ae_start2_cg,levels=c("1","0"))
+data$ae_int2_cg.factor = factor(data$ae_int2_cg,levels=c("1","0"))
+data$ae_setting2_cg.factor = factor(data$ae_setting2_cg,levels=c("1","2"))
+data$ae_class2_cg.factor = factor(data$ae_class2_cg,levels=c("1","2"))
+data$sae_def2_cg.factor = factor(data$sae_def2_cg,levels=c("1","0"))
+data$ae_serious2_cg___1.factor = factor(data$ae_serious2_cg___1,levels=c("0","1"))
+data$ae_serious2_cg___2.factor = factor(data$ae_serious2_cg___2,levels=c("0","1"))
+data$ae_serious2_cg___3.factor = factor(data$ae_serious2_cg___3,levels=c("0","1"))
+data$ae_serious2_cg___4.factor = factor(data$ae_serious2_cg___4,levels=c("0","1"))
+data$ae_serious2_cg___5.factor = factor(data$ae_serious2_cg___5,levels=c("0","1"))
+data$ae_severity2_cg.factor = factor(data$ae_severity2_cg,levels=c("1","2","3"))
+data$ae_rel2_cg.factor = factor(data$ae_rel2_cg,levels=c("1","2","3","4","5"))
+data$ae_action2_cg.factor = factor(data$ae_action2_cg,levels=c("1","2","3"))
+data$ae_outcome2_cg.factor = factor(data$ae_outcome2_cg,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit3_cg.factor = factor(data$ae_visit3_cg,levels=c("1","2"))
+data$ae_start3_cg.factor = factor(data$ae_start3_cg,levels=c("1","0"))
+data$ae_int3_cg.factor = factor(data$ae_int3_cg,levels=c("1","0"))
+data$ae_setting3_cg.factor = factor(data$ae_setting3_cg,levels=c("1","2"))
+data$ae_class3_cg.factor = factor(data$ae_class3_cg,levels=c("1","2"))
+data$sae_def3_cg.factor = factor(data$sae_def3_cg,levels=c("1","0"))
+data$ae_serious3_cg___1.factor = factor(data$ae_serious3_cg___1,levels=c("0","1"))
+data$ae_serious3_cg___2.factor = factor(data$ae_serious3_cg___2,levels=c("0","1"))
+data$ae_serious3_cg___3.factor = factor(data$ae_serious3_cg___3,levels=c("0","1"))
+data$ae_serious3_cg___4.factor = factor(data$ae_serious3_cg___4,levels=c("0","1"))
+data$ae_serious3_cg___5.factor = factor(data$ae_serious3_cg___5,levels=c("0","1"))
+data$ae_severity3_cg.factor = factor(data$ae_severity3_cg,levels=c("1","2","3"))
+data$ae_rel3_cg.factor = factor(data$ae_rel3_cg,levels=c("1","2","3","4","5"))
+data$ae_action3_cg.factor = factor(data$ae_action3_cg,levels=c("1","2","3"))
+data$ae_outcome3_cg.factor = factor(data$ae_outcome3_cg,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit4_cg.factor = factor(data$ae_visit4_cg,levels=c("1","2"))
+data$ae_start4_cg.factor = factor(data$ae_start4_cg,levels=c("1","0"))
+data$ae_int4_cg.factor = factor(data$ae_int4_cg,levels=c("1","0"))
+data$ae_setting4_cg.factor = factor(data$ae_setting4_cg,levels=c("1","2"))
+data$ae_class4_cg.factor = factor(data$ae_class4_cg,levels=c("1","2"))
+data$sae_def4_cg.factor = factor(data$sae_def4_cg,levels=c("1","0"))
+data$ae_serious4_cg___1.factor = factor(data$ae_serious4_cg___1,levels=c("0","1"))
+data$ae_serious4_cg___2.factor = factor(data$ae_serious4_cg___2,levels=c("0","1"))
+data$ae_serious4_cg___3.factor = factor(data$ae_serious4_cg___3,levels=c("0","1"))
+data$ae_serious4_cg___4.factor = factor(data$ae_serious4_cg___4,levels=c("0","1"))
+data$ae_serious4_cg___5.factor = factor(data$ae_serious4_cg___5,levels=c("0","1"))
+data$ae_severity4_cg.factor = factor(data$ae_severity4_cg,levels=c("1","2","3"))
+data$ae_rel4_cg.factor = factor(data$ae_rel4_cg,levels=c("1","2","3","4","5"))
+data$ae_action4_cg.factor = factor(data$ae_action4_cg,levels=c("1","2","3"))
+data$ae_outcome4_cg.factor = factor(data$ae_outcome4_cg,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$ae_visit5_cg.factor = factor(data$ae_visit5_cg,levels=c("1","2"))
+data$ae_start5_cg.factor = factor(data$ae_start5_cg,levels=c("1","0"))
+data$ae_int5_cg.factor = factor(data$ae_int5_cg,levels=c("1","0"))
+data$ae_setting5_cg.factor = factor(data$ae_setting5_cg,levels=c("1","2"))
+data$ae_class5_cg.factor = factor(data$ae_class5_cg,levels=c("1","2"))
+data$sae_def5_cg.factor = factor(data$sae_def5_cg,levels=c("1","0"))
+data$ae_serious5_cg___1.factor = factor(data$ae_serious5_cg___1,levels=c("0","1"))
+data$ae_serious5_cg___2.factor = factor(data$ae_serious5_cg___2,levels=c("0","1"))
+data$ae_serious5_cg___3.factor = factor(data$ae_serious5_cg___3,levels=c("0","1"))
+data$ae_serious5_cg___4.factor = factor(data$ae_serious5_cg___4,levels=c("0","1"))
+data$ae_serious5_cg___5.factor = factor(data$ae_serious5_cg___5,levels=c("0","1"))
+data$ae_severity5_cg.factor = factor(data$ae_severity5_cg,levels=c("1","2","3"))
+data$ae_rel5_cg.factor = factor(data$ae_rel5_cg,levels=c("1","2","3","4","5"))
+data$ae_action5_cg.factor = factor(data$ae_action5_cg,levels=c("1","2","3"))
+data$ae_outcome5_cg.factor = factor(data$ae_outcome5_cg,levels=c("1","2","3","4","5","6","7","8","9","10"))
+data$adverse_events_caregiver_complete.factor = factor(data$adverse_events_caregiver_complete,levels=c("0","1","2"))
+data$cogstat.factor = factor(data$cogstat,levels=c("1","2","3"))
+
+levels(data$redcap_event_name.factor)=c("Screening","Baseline","Six months")
+levels(data$site.factor)=c("Boulder","Denver Health","AF Williams","Lone Tree Primary","Anschutz Internal","Lowry Internal","Clinic 7","Clinic 8","Clinic 9","Clinic 10")
+levels(data$language.factor)=c("English","Spanish","Prefer not to answer")
+levels(data$race.factor)=c("White","African American/Black","Asian","Native Hawaiian/Other Pacific Islander","American Indian/Alaskan Native","Other","Prefer not to answer")
+levels(data$ethnicity.factor)=c("Not Hispanic","Hispanic","Unknown/Refused")
+levels(data$gender.factor)=c("Male","Female","Non-binary","Transgender","None of the above","Prefer not to answer")
+levels(data$ehr_demographic_data_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$pra_assign.factor)=c("Taryn","Evelyn","Ilian","Jerrie","Tatiana")
+levels(data$firstpra.factor)=c("Taryn","Evelyn","Ilian","Tiffany","Hillary","Other")
+levels(data$call_outcome1.factor)=c("Contacted","No answer","Scheduled another time for call","Left message")
+levels(data$secondpra.factor)=c("Taryn","Evelyn","Ilian","Tiffany","Hillary","Other")
+levels(data$call_outcome2.factor)=c("Contacted","No answer","Scheduled another time for call","Left message")
+levels(data$thirdpra.factor)=c("Taryn","Evelyn","Ilian","Tiffany","Hillary","Other")
+levels(data$call_outcome3.factor)=c("Contacted","No answer","Scheduled another time for call","Left message")
+levels(data$recruitment_tracking_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$screen_phone.factor)=c("Yes","No")
+levels(data$travel_visits.factor)=c("Yes","No")
+levels(data$move_yn.factor)=c("Yes","No")
+levels(data$spouse.factor)=c("Yes","No")
+levels(data$cg_status.factor)=c("Yes","No")
+levels(data$screen_outcome.factor)=c("agreed to study, randomized","declined by patient","declined by trusted person","unable to reach for eligibility survey","ineligible","deceased","declined by email prior to first contact","declined, open to later contact")
+levels(data$decline.factor)=c("not interested","illness/not feeling well","already completed AD/ACP paperwork","already had ACP conversations","No reason given","other")
+levels(data$decline_2___1.factor)=c("Unchecked","Checked")
+levels(data$decline_2___2.factor)=c("Unchecked","Checked")
+levels(data$decline_2___3.factor)=c("Unchecked","Checked")
+levels(data$decline_2___4.factor)=c("Unchecked","Checked")
+levels(data$decline_2___5.factor)=c("Unchecked","Checked")
+levels(data$decline_2___6.factor)=c("Unchecked","Checked")
+levels(data$contact_later.factor)=c("Yes","No")
+levels(data$participant_eligibility_survey_phone_screening_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$verbal_consent_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$tback_q1.factor)=c("Correct","Incorrect")
+levels(data$tback_q2.factor)=c("Correct","Incorrect")
+levels(data$tback_q3.factor)=c("Correct","Incorrect")
+levels(data$tback_q4.factor)=c("Correct","Incorrect")
+levels(data$tback_q5.factor)=c("Correct","Incorrect")
+levels(data$tback_q6.factor)=c("Correct","Incorrect")
+levels(data$tback_q7.factor)=c("Correct","Incorrect")
+levels(data$tback_q8.factor)=c("Correct","Incorrect")
+levels(data$tback_q9.factor)=c("Correct","Incorrect")
+levels(data$tback_q10.factor)=c("Correct","Incorrect")
+levels(data$tback_q11.factor)=c("Correct","Incorrect")
+levels(data$tback_q12.factor)=c("Correct","Incorrect")
+levels(data$tback_q13.factor)=c("Correct","Incorrect")
+levels(data$tback_q14.factor)=c("Correct","Incorrect")
+levels(data$tback_q15.factor)=c("Correct","Incorrect")
+levels(data$tback_q17.factor)=c("Correct","Incorrect")
+levels(data$teachback_questions_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$consented.factor)=c("Yes","No")
+levels(data$gender_id_pt.factor)=c("Male","Female","Non-binary","Transgender","None of the above","Prefer not to answer")
+levels(data$race_2.factor)=c("White","African American/Black","Asian","Native Hawaiian/Other Pacific Islander","American Indian/Alaskan Native","Other","Prefer not to answer")
+levels(data$ethnicity_2.factor)=c("Not Hispanic","Hispanic","Unknown/Refused")
+levels(data$education.factor)=c("Less than high school","High school or GED (12 years)","Bachelors Degree (16 years)","Masters Degree (18 years)","Doctorate Degree (20 years)","Unknown/Prefer not to answer")
+levels(data$educat_rand.factor)=c("1 - Less than or equal to 12 years o f education","2 - More than 12 years of education")
+levels(data$marital.factor)=c("Never married","Married","Divorced","Domestic Partnership/Living together","Separated","Widowed","Prefer not to answer")
+levels(data$rec_db.factor)=c("Yes","No")
+levels(data$consent_trackingparticipant_info_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$rand_moca.factor)=c("1 - Less than or equal to 17","2 - Greater than 17")
+levels(data$caregiver_yn.factor)=c("Yes","No")
+levels(data$telephone_moca_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$condition.factor)=c("Intervention","Control")
+levels(data$randomization_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$intvisit_sched.factor)=c("Boulder 1.A and 1.B","Boulder 2.A and 2.B","Boulder 3.A and 3.B","TBD","Not yet scheduled")
+levels(data$attend_a.factor)=c("Yes","No")
+levels(data$missed_a.factor)=c("Not interested","Moved/moving out of area","Illness/not feeling well","Transportation issue","Already completed AD","Already had Conversation","Scheduling issues","Unable to reach","Other")
+levels(data$attend_b.factor)=c("Yes","No")
+levels(data$missed_b.factor)=c("Not interested","Moved/moving out of area","Illness/not feeling well","Transportation issue","Already completed AD","Already had Conversation","Scheduling issues","Unable to reach","Other")
+levels(data$intervention_control_group_tracking_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$drop_yn.factor)=c("Yes","No")
+levels(data$reason_drop.factor)=c("No longer interested","Unable to attend group sessions","Transportation issues","Medical/health issues","Other")
+levels(data$withdraw_consent.factor)=c("Yes","No")
+levels(data$withdrawal_form_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$sdh1___1.factor)=c("Unchecked","Checked")
+levels(data$sdh1___2.factor)=c("Unchecked","Checked")
+levels(data$sdh1___3.factor)=c("Unchecked","Checked")
+levels(data$sdh1___4.factor)=c("Unchecked","Checked")
+levels(data$sdh1___5.factor)=c("Unchecked","Checked")
+levels(data$sdh1___6.factor)=c("Unchecked","Checked")
+levels(data$sdh1___7.factor)=c("Unchecked","Checked")
+levels(data$sdh1___8.factor)=c("Unchecked","Checked")
+levels(data$sdh1___9.factor)=c("Unchecked","Checked")
+levels(data$sdh2___0.factor)=c("Unchecked","Checked")
+levels(data$sdh2___1.factor)=c("Unchecked","Checked")
+levels(data$sdh2___2.factor)=c("Unchecked","Checked")
+levels(data$sdh2___3.factor)=c("Unchecked","Checked")
+levels(data$scd1.factor)=c("No","Yes","Prefer not to answer")
+levels(data$scd2.factor)=c("No","Yes","Prefer not to answer")
+levels(data$scd3.factor)=c("No","Yes","Prefer not to answer")
+levels(data$global1.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global2.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global3.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global4.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global5.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global6.factor)=c("Excellent","Very good","Good","Fair","Poor")
+levels(data$global7.factor)=c("Completely","Mostly","Moderately","A little","Not at all")
+levels(data$global8.factor)=c("Never","Rarely","Sometimes","Often","Always")
+levels(data$global9.factor)=c("None","Mild","Moderate","Severe","Very severe")
+levels(data$global10.factor)=c("0 - No pain","1","2","3","4","5","6","7","8","9","10 - Worst pain imaginable")
+levels(data$social1.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social2.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social3.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social4.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social5.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social6.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social7.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social8.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social9.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social10.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$social11.factor)=c("None of the time","A little of the time","Some of the time","Most of the time","All of the time","Not sure","Refuse")
+levels(data$patient_report_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$prioracp1.factor)=c("Yes","No","Not sure","Refused")
+levels(data$prioracp2.factor)=c("Yes","No","Not sure","Refused")
+levels(data$prioracp3.factor)=c("Yes","No","Not sure","Refused")
+levels(data$prioracp4.factor)=c("Yes","No","Not sure","Refused")
+levels(data$prioracp5.factor)=c("Yes","No","Not sure","Refused")
+levels(data$acpcomm1.factor)=c("Yes","Maybe","No","Refused")
+levels(data$acpcomm2.factor)=c("Yes","Maybe","No","Refused")
+levels(data$acpcomm3.factor)=c("Yes","Maybe","No","Refused")
+levels(data$acp_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$acpred1.factor)=c("I have already done it","I am definitely planning to do it in the next 30 days","I am thinking about doing it in the next 6 months","I have thought about it, but am not ready to do it","I have never thought about it","Missing/not answered")
+levels(data$acpred2.factor)=c("I have already done it","I am definitely planning to do it in the next 30 days","I am thinking about doing it in the next 6 months","I have thought about it, but am not ready to do it","I have never thought about it","Missing/not answered")
+levels(data$acpred3.factor)=c("I have already done it","I am definitely planning to do it in the next 30 days","I am thinking about doing it in the next 6 months","I have thought about it, but am not ready to do it","I have never thought about it","Missing/not answered")
+levels(data$acpred4.factor)=c("I have already done it","I am definitely planning to do it in the next 30 days","I am thinking about doing it in the next 6 months","I have thought about it, but am not ready to do it","I have never thought about it","Missing/not answered")
+levels(data$selfeff1.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff2.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff3.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff4.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff5.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff6.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff7.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff8.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff9.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff10.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$selfeff11.factor)=c("0 - Not at all confident","1","2","3","4 - Very confident")
+levels(data$qcom1.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom2.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom3.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom4.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom5.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom6.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Didnt do","Dont know")
+levels(data$qcom7.factor)=c("Yes","No")
+levels(data$qcom7b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom8.factor)=c("Yes","No")
+levels(data$qcom8b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom9.factor)=c("Yes","No")
+levels(data$qcom_9b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom10.factor)=c("Yes","No")
+levels(data$qcom_10b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom11.factor)=c("Yes","No")
+levels(data$qcom_11b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom12.factor)=c("Yes","No")
+levels(data$qcom_12b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$qcom13.factor)=c("Yes","No")
+levels(data$qcom_13b.factor)=c("0-Worst","1","2","3","4","5","6","7","8","9","10 - Best","Dont know")
+levels(data$outcomes_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$survey_yn.factor)=c("Yes","No")
+levels(data$giftcard_accept.factor)=c("Accepted","Declined")
+levels(data$giftcard_type.factor)=c("Electronic","Physical")
+levels(data$card_type.factor)=c("King Soopers","Walmart","Target")
+levels(data$giftcard_sent.factor)=c("Yes","Not yet")
+levels(data$gift_card_tracking_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$firstpra_2.factor)=c("Taryn","Evelyn","Ilian","Tiffany")
+levels(data$call_outcome5.factor)=c("Contacted","No answer","Scheduled another time for call","Left message")
+levels(data$secondpra_2.factor)=c("Taryn","Evelyn","Ilian","Tiffany")
+levels(data$call_outcome6.factor)=c("Contacted","No answer","Scheduled another time for call","Left message")
+levels(data$caregiver_yn_2.factor)=c("Yes","No")
+levels(data$cg_decline.factor)=c("Unable to locate care partner","Did not want care partner involved or felt they were too busy","Care partner declined to participate","Care partner not eligible")
+levels(data$caregiver_recruitment_tracking_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$screen_phone_2.factor)=c("Yes","No")
+levels(data$travel_visits_2.factor)=c("Yes","No")
+levels(data$move_yn_2.factor)=c("Yes","No")
+levels(data$caregiver_eligibility_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$verbal_consent_caregiver_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$tback_q1_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q2_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q3_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q4_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q5_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q6_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q7_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q8_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q9_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q10_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q11_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q12_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q13_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q14_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q15_cg.factor)=c("Correct","Incorrect")
+levels(data$tback_q17_cg.factor)=c("Correct","Incorrect")
+levels(data$teachback_questions_caregiver_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$gender_sp.factor)=c("Male","Female","Non-binary","Transgender","None of the above","Prefer not to answer")
+levels(data$race_sp.factor)=c("White","African American/Black","Asian","Native Hawaiian/Other Pacific Islander","American Indian/Alaskan Native","Other","Prefer not to answer")
+levels(data$ethnicity_sp.factor)=c("Not Hispanic","Hispanic","Unknown/Refused")
+levels(data$language_sp.factor)=c("English","Spanish","Prefer not to answer")
+levels(data$education_sp.factor)=c("Less than high school","High school or GED (12 years)","Bachelors Degree (16 years)","Masters Degree (18 years)","Doctorate Degree (20 years)","Unknown/Prefer not to answer")
+levels(data$marital_sp.factor)=c("Never married","Married","Divorced","Domestic Partnership/Living together","Separated","Widowed","Prefer not to answer")
+levels(data$caregiver_info_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$interview_yn.factor)=c("Yes","No")
+levels(data$giftcard_accept_2.factor)=c("Accepted","Declined")
+levels(data$giftcard_type_cg.factor)=c("Electronic","Physical")
+levels(data$card_type_cg.factor)=c("King Soopers","Walmart","Target")
+levels(data$giftcard_sent_cg.factor)=c("Yes","Not yet")
+levels(data$gift_card_tracking_caregiver_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$ae_visit.factor)=c("Baseline","6 months")
+levels(data$ae_start.factor)=c("Yes","No")
+levels(data$ae_int.factor)=c("Yes","No")
+levels(data$ae_setting.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def.factor)=c("Yes","No")
+levels(data$ae_serious___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit2.factor)=c("Baseline","6 months")
+levels(data$ae_start2.factor)=c("Yes","No")
+levels(data$ae_int2.factor)=c("Yes","No")
+levels(data$ae_setting2.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class2.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def2.factor)=c("Yes","No")
+levels(data$ae_serious2___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity2.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel2.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action2.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome2.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit3.factor)=c("Baseline","6 months")
+levels(data$ae_start3.factor)=c("Yes","No")
+levels(data$ae_int3.factor)=c("Yes","No")
+levels(data$ae_setting3.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class3.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def3.factor)=c("Yes","No")
+levels(data$ae_serious3___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity3.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel3.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action3.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome3.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit4.factor)=c("Baseline","6 months")
+levels(data$ae_start4.factor)=c("Yes","No")
+levels(data$ae_int4.factor)=c("Yes","No")
+levels(data$ae_setting4.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class4.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def4.factor)=c("Yes","No")
+levels(data$ae_serious4___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity4.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel4.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action4.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome4.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit5.factor)=c("Baseline","6 months")
+levels(data$ae_start5.factor)=c("Yes","No")
+levels(data$ae_int5.factor)=c("Yes","No")
+levels(data$ae_setting5.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class5.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def5.factor)=c("Yes","No")
+levels(data$ae_serious5___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity5.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel5.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action5.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome5.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$adverse_events_participant_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$ae_visit_cg.factor)=c("Baseline","6 months")
+levels(data$ae_start_cg.factor)=c("Yes","No")
+levels(data$ae_int_cg.factor)=c("Yes","No")
+levels(data$ae_setting_cg.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class_cg.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def_cg.factor)=c("Yes","No")
+levels(data$ae_serious_cg___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious_cg___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious_cg___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious_cg___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious_cg___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity_cg.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel_cg.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action_cg.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome_cg.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit2_cg.factor)=c("Baseline","6 months")
+levels(data$ae_start2_cg.factor)=c("Yes","No")
+levels(data$ae_int2_cg.factor)=c("Yes","No")
+levels(data$ae_setting2_cg.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class2_cg.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def2_cg.factor)=c("Yes","No")
+levels(data$ae_serious2_cg___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2_cg___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2_cg___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2_cg___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious2_cg___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity2_cg.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel2_cg.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action2_cg.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome2_cg.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit3_cg.factor)=c("Baseline","6 months")
+levels(data$ae_start3_cg.factor)=c("Yes","No")
+levels(data$ae_int3_cg.factor)=c("Yes","No")
+levels(data$ae_setting3_cg.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class3_cg.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def3_cg.factor)=c("Yes","No")
+levels(data$ae_serious3_cg___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3_cg___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3_cg___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3_cg___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious3_cg___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity3_cg.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel3_cg.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action3_cg.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome3_cg.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit4_cg.factor)=c("Baseline","6 months")
+levels(data$ae_start4_cg.factor)=c("Yes","No")
+levels(data$ae_int4_cg.factor)=c("Yes","No")
+levels(data$ae_setting4_cg.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class4_cg.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def4_cg.factor)=c("Yes","No")
+levels(data$ae_serious4_cg___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4_cg___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4_cg___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4_cg___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious4_cg___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity4_cg.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel4_cg.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action4_cg.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome4_cg.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$ae_visit5_cg.factor)=c("Baseline","6 months")
+levels(data$ae_start5_cg.factor)=c("Yes","No")
+levels(data$ae_int5_cg.factor)=c("Yes","No")
+levels(data$ae_setting5_cg.factor)=c("Clinic","Not in clinic")
+levels(data$ae_class5_cg.factor)=c("No adjudication required","Yes, adjudication required")
+levels(data$sae_def5_cg.factor)=c("Yes","No")
+levels(data$ae_serious5_cg___1.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5_cg___2.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5_cg___3.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5_cg___4.factor)=c("Unchecked","Checked")
+levels(data$ae_serious5_cg___5.factor)=c("Unchecked","Checked")
+levels(data$ae_severity5_cg.factor)=c("Mild - limited in intensity and duration, without sustained effect on participant","Moderate - limited in intensity or in duration, with some sustained effect on participant","Severe - significant intensity and duration of event, with significant sustained effect on participant")
+levels(data$ae_rel5_cg.factor)=c("Not Related","Unlikely to be Related","Potentially Related","Probably Related","Definitely Related")
+levels(data$ae_action5_cg.factor)=c("Intervened","No intervention","Unknown")
+levels(data$ae_outcome5_cg.factor)=c("Intervened","No intervention","Unknown","Not Applicable","Not recovered/not resolved","Recovered/resolved","Recovering/resolving","Recovered/resolved with sequelae","Fatal","Unknown")
+levels(data$adverse_events_caregiver_complete.factor)=c("Incomplete","Unverified","Complete")
+```
+
+### Demographic, Recruitment Tracking, Telephone MOCA 
+Overall:
+```{r, echo=FALSE}
+library(table1)
+table1(~ redcap_event_name.factor, data=data)
+```
+
+Screening:
+```{r, echo=FALSE}
+screen_data <- subset(data, redcap_event_name=="screening_arm_1")
+table1(~ site.factor + age + language.factor + race.factor + ethnicity.factor + gender.factor + ehr_demographic_data_complete.factor + recruitment_tracking_complete.factor + moca_score_raw + moca_score_corr + rand_moca.factor + caregiver_yn.factor + telephone_moca_complete.factor, data=screen_data) # [caregiver_yn] might not be correct: Show the field ONLY if: [moca_score_corr] <= 17
+```
+
+```{r, echo=FALSE}
+#Baseline:
+baseline_data <- subset(data, redcap_event_name=="baseline_arm_1")
+```
+
+### Randomization, Intervention & Control Group Tracking
+How randomization of CI is going?
+
+Screening: 39 subjects completed randomization
+```{r, echo=FALSE}
+table1(~ randomization_complete.factor + condition.factor + intvisit_sched.factor, data=screen_data)
+randomization_complete <- subset(screen_data, randomization_complete.factor=="Complete")
+ID <- randomization_complete$record_id
+```
+
+Baseline: 37 subjects in total - 31 subjects have cogstat, 6 missing
+```{r, echo=FALSE}
+table1(~ cogstat.factor, data=baseline_data)
+```
+
+Distribution of cogstat among the 39 subjects who completed randomization:
+```{r, echo=FALSE}
+randomization_complete_cogstat <- data[data$record_id %in% ID,]
+randomization_complete_cogstat2 <- randomization_complete_cogstat[!duplicated(randomization_complete_cogstat$record_id, fromLast=T), ]
+table1(~ cogstat.factor, data=randomization_complete_cogstat2)
+```
+
+Distribution of cogstat among the 39 subjects who completed randomization by condition.factor:
+```{r, echo=FALSE}
+condition <- data.frame(screen_data$record_id,screen_data$condition.factor)
+names(condition)[1] <- "record_id"
+randomization_complete_cogstat3 <- merge(randomization_complete_cogstat2,condition,by=c("record_id"))
+table1(~ cogstat.factor|screen_data.condition.factor, data=randomization_complete_cogstat3)
+```

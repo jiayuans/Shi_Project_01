@@ -13,6 +13,6 @@ boxplot(IQ ~ Smelter, data = dataset)
 kable(table(dataset$IQ, dataset$Smelter))
 mean(dataset$IQ)
 ```
-The boxplot shows the IQ levels by location status.
-The table displays the frequency of the IQ levels by location status from the dataset.
+The boxplot shows the IQ levels by location status. We can see that the median of IQ scores in the Far group is higher than that in the Near group.
+The table displays the frequency of the IQ levels by location status. It seems subjects with the highest 5 IQ scores (118-141) in the dataset are in the Far group, i.e., live far from the 1 mile of the lead smelter.
 
